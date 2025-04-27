@@ -1,3 +1,5 @@
+from machine import Pin
+from neopixel import NeoPixel
 import network
 import socket
 import time
@@ -21,6 +23,12 @@ srv.bind(addr)
 srv.listen(1)
 print("Listening on", addr)
 
+# pin
+pin = Pin(48, Pin.OUT)   # set GPIO0 to output to drive NeoPixels
+pixels = NeoPixel(pin, 1)   # create NeoPixel driver on GPIO0 for 8 pixels
+pixels[0] = [0, 0, 0]
+pixels.write()
+
 while True:
     cl, remote = srv.accept()
     print("Client:", remote)
@@ -29,6 +37,18 @@ while True:
         if not data:
             break
         print("Got:", data)
-        cl.send(b"ACK")
+        cmd = data.strip().upper()
+        if cmd == b"LED ON":
+            pixels[0] = [0, 255, 0]
+            pixels.write()
+            cl.send(b"OK")
+        elif cmd == b"LED OFF":
+            pixels[0] = [0, 0, 0]
+            pixels.write()
+            cl.send(b"OK")
+        else:
+            cl.send(b"ERR")
+
+
     cl.close()
     print("Closed")
