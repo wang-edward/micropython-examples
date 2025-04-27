@@ -9,4 +9,15 @@ repl
 picocom /dev/tty.usbserial-130 -b115200
 ```
 
+run
+```
+mpremote run main.py
+```
+
+
+update code
+```
+mpremote connect /dev/tty.usbserial-130 fs cp main.py : # kinda bad
+```
+
 https://micropython.org/download/ESP32_GENERIC_S3/
