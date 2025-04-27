@@ -15,9 +15,9 @@ mpremote run main.py
 ```
 
 
-update code
+copy files
 ```
-mpremote connect /dev/tty.usbserial-130 fs cp main.py : # kinda bad
+mpremote fs cp secrets.py :
 ```
 
 https://micropython.org/download/ESP32_GENERIC_S3/
