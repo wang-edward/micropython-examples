@@ -18,6 +18,7 @@ mpremote run client.py
 copy files
 ```
 mpremote fs cp secrets.py :
+mpremote fs cp microdot.py :
 ```
 
 https://micropython.org/download/ESP32_GENERIC_S3/
