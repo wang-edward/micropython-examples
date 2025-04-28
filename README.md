@@ -11,7 +11,7 @@ picocom /dev/tty.usbserial-130 -b115200
 
 run
 ```
-mpremote run main.py
+mpremote run client.py
 ```
 
 
