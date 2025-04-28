@@ -2,3 +2,4 @@ esptool
 mpremote
 micropython-esp32-stubs
 pytest
+requests
