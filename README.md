@@ -21,3 +21,8 @@ mpremote fs cp secrets.py :
 ```
 
 https://micropython.org/download/ESP32_GENERIC_S3/
+
+install stuff
+```
+mpremote mip install microdot
+```
