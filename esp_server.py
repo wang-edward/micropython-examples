@@ -1,10 +1,12 @@
-# esp32_rest.py
+# esp32_server.py
+
 from microdot import Microdot, Response
 from machine import Pin
 from neopixel import NeoPixel
-import network, time, secrets
+import network, time
+import secrets   # contains SSID, PASSWORD
 
-# — Wi-Fi setup (as before) —
+# — Wi-Fi setup —
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect(secrets.SSID, secrets.PASSWORD)
@@ -12,8 +14,8 @@ while not wlan.isconnected():
     time.sleep_ms(100)
 print("Wi-Fi up:", wlan.ifconfig())
 
-# — NeoPixel setup —
-pin = Pin(48, Pin.OUT)
+# — NeoPixel on GPIO48, single pixel —
+pin    = Pin(48, Pin.OUT)
 pixels = NeoPixel(pin, 1)
 pixels[0] = (0,0,0)
 pixels.write()
@@ -22,18 +24,17 @@ pixels.write()
 app = Microdot()
 Response.default_content_type = 'application/json'
 
-@app.post('/led')
-def led(req):
-    cmd = req.json.get('cmd','').strip().upper()
-    if cmd == 'LED ON':
-        pixels[0] = (0,255,0)
-        pixels.write()
-        return {'status':'OK'}
-    elif cmd == 'LED OFF':
-        pixels[0] = (0,0,0)
-        pixels.write()
-        return {'status':'OK'}
-    else:
-        return {'status':'ERR','error':'unknown command'}, 400
+@app.post('/display/color')
+def set_color(req):
+    c = req.json.get('c')
+    # expect c = [R,G,B]
+    if isinstance(c, list) and len(c) == 3:
+        try:
+            pixels[0] = tuple(int(x) for x in c)
+            pixels.write()
+            return {'status':'OK'}
+        except:
+            pass
+    return {'status':'ERR','error':'invalid color'}, 400
 
 app.run(host='0.0.0.0', port=80)
